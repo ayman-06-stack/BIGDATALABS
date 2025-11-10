@@ -55,7 +55,7 @@
                     <archive>
                         <manifest>
                             <!-- Classe main à modifier selon le TP -->
-                            <mainClass>edu.supmti.hadoop.Main</mainClass>
+                            <mainClass>edu.supmti.hadoop.WriteHDFS</mainClass>
                         </manifest>
                     </archive>
                     <finalName>WriteHDFS</finalName>
