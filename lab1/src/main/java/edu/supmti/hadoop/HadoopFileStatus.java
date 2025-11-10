@@ -1,0 +1,66 @@
+package edu.supmti.hadoop;
+
+import java.io.IOException;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.*;
+
+public class HadoopFileStatus {
+    public static void main(String[] args) {
+        
+        if (args.length != 3) {
+            System.err.println("Usage: HadoopFileStatus <chemin> <nom_fichier> <nouveau_nom>");
+            System.exit(1);
+        }
+        
+        Configuration conf = new Configuration();
+        FileSystem fs;
+        
+        try {
+            fs = FileSystem.get(conf);
+            Path filepath = new Path(args[0], args[1]);
+            
+            if(!fs.exists(filepath)){
+                System.out.println("File does not exist");
+                System.exit(1);
+            }
+            
+            FileStatus status = fs.getFileStatus(filepath);
+            
+            System.out.println("=== FILE INFORMATION ===");
+            System.out.println("File Name: " + filepath.getName());
+            System.out.println("File Size: " + status.getLen() + " bytes");
+            System.out.println("File Owner: " + status.getOwner());
+            System.out.println("File Permission: " + status.getPermission());
+            System.out.println("File Replication: " + status.getReplication());
+            System.out.println("File Block Size: " + status.getBlockSize());
+            
+            System.out.println("\n=== BLOCK LOCATIONS ===");
+            BlockLocation[] blockLocations = fs.getFileBlockLocations(status, 0, status.getLen());
+            for(BlockLocation blockLocation : blockLocations) {
+                String[] hosts = blockLocation.getHosts();
+                System.out.println("Block offset: " + blockLocation.getOffset());
+                System.out.println("Block length: " + blockLocation.getLength());
+                System.out.print("Block hosts: ");
+                for (String host : hosts) {
+                    System.out.print(host + " ");
+                }
+                System.out.println();
+            }
+            
+            // Renommer le fichier
+            Path newPath = new Path(args[0], args[2]);
+            boolean renamed = fs.rename(filepath, newPath);
+            
+            if (renamed) {
+                System.out.println("\n✓ File renamed successfully to: " + args[2]);
+            } else {
+                System.out.println("\n✗ Failed to rename file");
+            }
+            
+            fs.close();
+            
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
