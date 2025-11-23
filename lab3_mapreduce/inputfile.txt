@@ -1,0 +1,5 @@
+Hello World Bye World
+Hello Hadoop Goodbye Hadoop
+Hadoop is great
+MapReduce is powerful
+Hello MapReduce
