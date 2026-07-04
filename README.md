@@ -1,246 +1,374 @@
-# 📊 BigDataLabs - Big Data Analysis & Machine Learning
+# 🎓 Derb School - School Management System
 
-Comprehensive laboratory for big data analysis, machine learning projects, and data science exploration.
+Complete school management platform built with Laravel for student, teacher, and course administration.
 
 ## 📖 About
 
-BigDataLabs is a collection of Jupyter notebooks and projects for analyzing, processing, and visualizing large-scale datasets. This repository contains educational and research projects in data science, machine learning, and big data technologies.
+Derb School is a comprehensive web-based school management system developed with Laravel framework. It provides complete solutions for managing students, teachers, courses, grades, attendance, and schedules in a modern, intuitive interface.
 
-## 🎯 Objectives
+## ✨ Features
 
-- ✅ Analyze and explore massive datasets
-- ✅ Build scalable machine learning models
-- ✅ Visualize patterns and data insights
-- ✅ Learn big data technologies and frameworks
-- ✅ Master data processing pipelines
+### 🔐 Authentication & Authorization
+- ✅ Secure user authentication
+- ✅ Role-based access control (Admin, Teacher, Student, Parent)
+- ✅ Session management
+- ✅ Password reset functionality
 
-## 🛠️ Technologies
+### 👥 Student Management
+- ✅ Student registration and enrollment
+- ✅ Update student information
+- ✅ Track academic progress
+- ✅ View student history
+- ✅ Manage student documents
 
-- **Jupyter Notebook** (85.1%): Interactive data analysis
-- **Java** (13.9%): Big data frameworks
-- **Python** (1%): Data processing
+### 👨‍🏫 Teacher Management
+- ✅ Add and manage teachers
+- ✅ Assign teachers to courses
+- ✅ Manage teaching schedules
+- ✅ Track teacher performance
 
-### Libraries & Frameworks
-- **Pandas**: Data manipulation and analysis
-- **NumPy**: Numerical computing
-- **Matplotlib & Seaborn**: Data visualization
-- **Scikit-learn**: Machine learning algorithms
-- **Apache Spark** (optional): Distributed processing
-- **Hadoop** (optional): Big data platform
+### 📚 Course Management
+- ✅ Create and manage courses
+- ✅ Assign course instructors
+- ✅ Set course schedules
+- ✅ Manage course materials
+- ✅ Track course enrollment
 
-## 📊 Project Domains
+### 📅 Attendance Tracking
+- ✅ Daily attendance marking
+- ✅ Attendance reports
+- ✅ Absence notifications
+- ✅ Attendance analytics
 
-### 🤖 Machine Learning
-- Supervised learning models
-- Unsupervised learning and clustering
-- Model evaluation and tuning
-- Feature engineering techniques
+### 📊 Grades & Results
+- ✅ Record grades and marks
+- ✅ Calculate GPA
+- ✅ Generate report cards
+- ✅ Performance analytics
+- ✅ Grade distribution charts
 
-### 📈 Data Analysis
-- Exploratory Data Analysis (EDA)
-- Statistical analysis
-- Data cleaning and preprocessing
-- Pattern recognition
+### 🏫 Class Management
+- ✅ Create and manage classes
+- ✅ Assign students to classes
+- ✅ Class schedules
+- ✅ Class-wise performance
 
-### 📉 Data Visualization
-- Interactive dashboards
-- Time series plots
-- Distribution analysis
-- Correlation heatmaps
+### 📢 Communication
+- ✅ Announcements and notices
+- ✅ Parent notifications
+- ✅ Message board
+- ✅ Event calendar
 
-### 🔍 Data Mining
-- Association rule mining
-- Text mining
-- Web scraping
-- Data extraction
+## 🛠️ Technology Stack
+
+### Backend
+- **Laravel 10.x**: PHP web framework
+- **PHP 8.1+**: Server-side language
+- **Blade**: Template engine
+
+### Frontend
+- **Blade Templates**: Server-side rendering
+- **HTML5/CSS3**: Structure and styling
+- **JavaScript**: Interactive features
+- **Bootstrap**: Responsive design
+
+### Database
+- **MySQL 8.0**: Relational database
+- **Eloquent ORM**: Database abstraction
+
+### Additional Tools
+- **Composer**: PHP package manager
+- **Laravel Artisan**: Command-line interface
+- **Migrations**: Database version control
 
 ## 🚀 Installation
 
 ### Prerequisites
-- Python 3.8+
-- Jupyter Notebook
-- Java (optional, for Spark)
+```
+✓ PHP 8.1 or higher
+✓ Composer
+✓ MySQL 5.7 or higher
+✓ Git
+✓ Node.js & npm (optional, for frontend assets)
+```
 
-### Setup Instructions
+### Installation Steps
+
+#### 1. Clone Repository
+```bash
+git clone https://github.com/ayman-06-stack/Derb-school.git
+cd Derb-school
+```
+
+#### 2. Install Dependencies
+```bash
+# Install PHP dependencies
+composer install
+
+# Install NPM dependencies (if needed)
+npm install
+npm run dev
+```
+
+#### 3. Configure Environment
+```bash
+# Copy environment file
+cp .env.example .env
+
+# Generate application key
+php artisan key:generate
+
+# Generate JWT secret (if using JWT)
+php artisan jwt:secret
+```
+
+#### 4. Database Setup
+```bash
+# Configure database credentials in .env
+# DB_CONNECTION=mysql
+# DB_HOST=127.0.0.1
+# DB_PORT=3306
+# DB_DATABASE=derb_school
+# DB_USERNAME=root
+# DB_PASSWORD=
+
+# Run migrations
+php artisan migrate
+
+# Seed sample data (optional)
+php artisan db:seed
+```
+
+#### 5. Start Application
+```bash
+# Clear cache
+php artisan config:cache
+
+# Start development server
+php artisan serve
+
+# Access at http://localhost:8000
+```
+
+## 📋 Database Schema
+
+### Key Tables
+
+```sql
+-- Users table
+CREATE TABLE users (
+    id BIGINT PRIMARY KEY,
+    name VARCHAR(255),
+    email VARCHAR(255) UNIQUE,
+    role ENUM('admin', 'teacher', 'student', 'parent'),
+    password VARCHAR(255),
+    created_at TIMESTAMP
+);
+
+-- Students table
+CREATE TABLE students (
+    id BIGINT PRIMARY KEY,
+    user_id BIGINT,
+    enrollment_number VARCHAR(50) UNIQUE,
+    class_id BIGINT,
+    date_of_birth DATE,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+-- Courses table
+CREATE TABLE courses (
+    id BIGINT PRIMARY KEY,
+    name VARCHAR(255),
+    code VARCHAR(50) UNIQUE,
+    teacher_id BIGINT,
+    credits INT,
+    FOREIGN KEY (teacher_id) REFERENCES users(id)
+);
+
+-- Grades table
+CREATE TABLE grades (
+    id BIGINT PRIMARY KEY,
+    student_id BIGINT,
+    course_id BIGINT,
+    mark DECIMAL(5,2),
+    grade VARCHAR(2),
+    FOREIGN KEY (student_id) REFERENCES students(id),
+    FOREIGN KEY (course_id) REFERENCES courses(id)
+);
+
+-- Attendance table
+CREATE TABLE attendance (
+    id BIGINT PRIMARY KEY,
+    student_id BIGINT,
+    course_id BIGINT,
+    date DATE,
+    status ENUM('present', 'absent', 'late'),
+    FOREIGN KEY (student_id) REFERENCES students(id)
+);
+
+-- Classes table
+CREATE TABLE classes (
+    id BIGINT PRIMARY KEY,
+    name VARCHAR(255),
+    section VARCHAR(50),
+    capacity INT,
+    created_at TIMESTAMP
+);
+```
+
+## 👥 User Roles & Permissions
+
+### 🔑 Admin
+- Full system access
+- Manage users and roles
+- System configuration
+- Reports and analytics
+
+### 👨‍🏫 Teacher
+- Manage assigned courses
+- Record grades and attendance
+- Upload course materials
+- Communicate with students
+
+### 👨‍🎓 Student
+- View courses and schedules
+- Check grades and attendance
+- Access course materials
+- View announcements
+
+### 👨‍👩‍👧 Parent
+- Monitor child's progress
+- View attendance and grades
+- Receive notifications
+
+## 🔄 Main Workflows
+
+### Student Enrollment
+```
+1. Register student account
+2. Assign to class
+3. Enroll in courses
+4. Activate account
+```
+
+### Grade Management
+```
+1. Teacher enters grades
+2. Automatic GPA calculation
+3. Generate report cards
+4. Parent notification
+```
+
+### Attendance Tracking
+```
+1. Teacher marks attendance
+2. System tracks percentage
+3. Automatic warnings if low
+4. Generate attendance reports
+```
+
+## 📈 Key Functionalities
+
+### Dashboard
+- Overview of key metrics
+- Recent activities
+- Quick statistics
+- Upcoming events
+
+### Reports
+- Student progress reports
+- Attendance reports
+- Grade distribution analysis
+- Performance trends
+
+### Analytics
+- Student performance analytics
+- Attendance patterns
+- Course performance metrics
+- Teacher effectiveness
+
+## 🎨 UI/UX Features
+
+- Responsive design (Mobile, Tablet, Desktop)
+- Intuitive navigation
+- Real-time notifications
+- Dark mode support
+- Accessibility compliance
+
+## 🔒 Security Features
+
+- SQL injection prevention
+- CSRF protection
+- XSS prevention
+- Password hashing (bcrypt)
+- Role-based access control
+- Audit logging
+
+## 🧪 Testing
 
 ```bash
-# Clone the repository
-git clone https://github.com/ayman-06-stack/BIGDATALABS.git
-cd BIGDATALABS
+# Run tests
+php artisan test
 
-# Create virtual environment (recommended)
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+# Run specific test
+php artisan test --filter=StudentTest
 
-# Install dependencies
-pip install -r requirements.txt
-
-# Launch Jupyter
-jupyter notebook
+# Generate coverage report
+php artisan test --coverage
 ```
 
-## 📋 Requirements
+## 🚀 Deployment
 
-```
-jupyter==4.1.1
-pandas==2.0.3
-numpy==1.24.3
-matplotlib==3.7.2
-seaborn==0.12.2
-scikit-learn==1.3.0
-scipy==1.11.1
-pyspark==3.5.0  # Optional
-```
+### Server Requirements
+- Web server (Apache/Nginx)
+- PHP 8.1+
+- MySQL database
+- SSL certificate
 
-## 📁 Project Structure
+### Deployment Steps
+1. Upload files to server
+2. Configure .env file
+3. Run migrations
+4. Set proper permissions
+5. Enable HTTPS
 
+## 📚 API Documentation
+
+### Authentication Endpoints
 ```
-BIGDATALABS/
-├── notebooks/                 # Jupyter notebooks
-│   ├── 01_data_exploration/
-│   ├── 02_preprocessing/
-│   ├── 03_ml_models/
-│   └── 04_visualization/
-├── data/
-│   ├── raw/                  # Original datasets
-│   └── processed/            # Cleaned datasets
-├── src/
-│   ├── data_processing.py    # Data utilities
-│   ├── ml_models.py          # Model definitions
-│   └── visualization.py      # Plotting functions
-├── java_src/                 # Java programs
-│   └── BigDataProcessing.java
-├── results/                  # Output files
-├── requirements.txt
-└── README.md
+POST   /api/auth/login
+POST   /api/auth/register
+POST   /api/auth/logout
+GET    /api/auth/profile
 ```
 
-## 📚 Notebook Guide
-
-### Getting Started
-Each notebook is self-contained and includes:
-- Problem statement
-- Data loading
-- Analysis steps
-- Visualizations
-- Conclusions
-
-### How to Use
-
-1. **Navigate to notebooks folder**
-2. **Open desired notebook with Jupyter**
-3. **Execute cells sequentially** (Shift+Enter)
-4. **Modify code** as needed for experimentation
-
-## 🔬 Example Workflows
-
-### Data Exploration Workflow
-```python
-import pandas as pd
-import matplotlib.pyplot as plt
-
-# Load data
-df = pd.read_csv('data/raw/dataset.csv')
-
-# Explore
-print(df.info())
-print(df.describe())
-
-# Visualize
-df.hist()
-plt.show()
+### Student Endpoints
+```
+GET    /api/students
+POST   /api/students
+GET    /api/students/{id}
+PUT    /api/students/{id}
+DELETE /api/students/{id}
 ```
 
-### Machine Learning Workflow
-```python
-from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestClassifier
-
-# Prepare data
-X = df.drop('target', axis=1)
-y = df['target']
-X_train, X_test, y_train, y_test = train_test_split(X, y)
-
-# Train model
-model = RandomForestClassifier()
-model.fit(X_train, y_train)
-
-# Evaluate
-score = model.score(X_test, y_test)
-print(f"Accuracy: {score:.2%}")
+### Course Endpoints
 ```
-
-## 📊 Dataset Resources
-
-- [Kaggle Datasets](https://www.kaggle.com/datasets)
-- [UCI Machine Learning Repository](https://archive.ics.uci.edu/ml/)
-- [Google Dataset Search](https://datasetsearch.research.google.com/)
-- [OpenML](https://www.openml.org/)
-
-## 🎓 Learning Resources
-
-### Documentation
-- [Pandas Documentation](https://pandas.pydata.org/docs/)
-- [NumPy Guide](https://numpy.org/doc/)
-- [Scikit-learn Tutorials](https://scikit-learn.org/stable/documentation.html)
-- [Jupyter Documentation](https://jupyter.org/documentation)
-
-### Courses & Tutorials
-- [Fast.ai - Practical Deep Learning](https://fast.ai/)
-- [Andrew Ng's Machine Learning Course](https://www.coursera.org/learn/machine-learning)
-- [DataCamp - Data Science](https://www.datacamp.com/)
-
-## 🧪 Tips & Best Practices
-
-- 📌 Always explore data before modeling
-- 📌 Split data into train/test sets
-- 📌 Normalize/scale features when needed
-- 📌 Cross-validate your models
-- 📌 Document your findings
-- 📌 Version control your notebooks
+GET    /api/courses
+POST   /api/courses
+GET    /api/courses/{id}
+PUT    /api/courses/{id}
+DELETE /api/courses/{id}
+```
 
 ## 🤝 Contributing
 
 Contributions are welcome! Please:
 
 1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/NewAnalysis`)
-3. Add your notebook or code
-4. Write clear documentation
-5. Submit a pull request
-
-### Guidelines
-- Include detailed comments in code
-- Add markdown cells explaining your work
-- Use meaningful variable names
-- Follow PEP 8 style guide
-
-## 🐛 Troubleshooting
-
-### Common Issues
-
-**Issue: Jupyter not found**
-```bash
-pip install jupyter
-```
-
-**Issue: Missing dependencies**
-```bash
-pip install -r requirements.txt
-```
-
-**Issue: Memory error with large datasets**
-- Use `pd.read_csv()` with `chunksize` parameter
-- Filter data before loading
-- Use Spark for distributed processing
-
-## 📈 Performance Tips
-
-- Use vectorized operations (NumPy/Pandas)
-- Avoid Python loops when possible
-- Cache intermediate results
-- Use appropriate data types
-- Parallelize with PySpark
+2. Create feature branch (`git checkout -b feature/NewFeature`)
+3. Commit changes (`git commit -m 'Add NewFeature'`)
+4. Push to branch (`git push origin feature/NewFeature`)
+5. Open a Pull Request
 
 ## 📝 License
 
@@ -253,13 +381,13 @@ MIT License - See LICENSE file for details
 - Email: aymanguendouz07@gmail.com
 - LinkedIn: [Ayman Guendouz](https://www.linkedin.com/in/ayman-guendouz)
 
-## 🙏 Acknowledgments
+## 🆘 Support
 
-- Data science community contributions
-- Kaggle datasets
-- Open source libraries developers
-- Academic references
+For issues, questions, or suggestions:
+- Open an issue on GitHub
+- Email: aymanguendouz07@gmail.com
+- Check existing documentation
 
 ---
 
-⭐ **If this repository helped you, please leave a star!** ⭐
+⭐ **If this project helped you, please leave a star!** ⭐
